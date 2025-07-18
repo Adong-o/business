@@ -39,32 +39,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 5. Fade-in Animation on Scroll
-    const observer = new IntersectionObserver((entries) => {
+    const fadeInElements = document.querySelectorAll('.fade-in');
+
+    const fadeInObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                entry.target.classList.add('fade-in-visible');
+                entry.target.classList.add('visible');
                 observer.unobserve(entry.target);
             }
         });
     }, { threshold: 0.1 });
 
-    const elementsToAnimate = document.querySelectorAll('.service-card, .step-card, .about-content, .contact-form');
-    elementsToAnimate.forEach(el => {
-        el.classList.add('fade-in-hidden');
-        observer.observe(el);
+    fadeInElements.forEach(el => {
+        fadeInObserver.observe(el);
     });
 });
-
-// Add this small CSS snippet to your styles.css for the animation
-/*
-.fade-in-hidden {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-}
-
-.fade-in-visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-*/
