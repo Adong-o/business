@@ -1,51 +1,70 @@
-// Mobile Navigation
-const hamburger = document.querySelector('.hamburger');
-const navLinks = document.querySelector('.nav-links');
+document.addEventListener('DOMContentLoaded', () => {
 
-hamburger.addEventListener('click', () => {
-    navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
-});
+    // 1. Mobile Navigation (Hamburger Menu)
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu');
 
-// Smooth Scrolling for Navigation Links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            window.scrollTo({
-                top: target.offsetTop - 60, // Adjust for fixed navbar
-                behavior: 'smooth'
-            });
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
+    });
+
+    document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navMenu.classList.remove('active');
+    }));
+
+    // 2. Navbar Shadow on Scroll
+    const header = document.querySelector('.header');
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            header.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.1)';
+        } else {
+            header.style.boxShadow = 'none';
         }
     });
+
+    // 3. Smooth Scrolling for Anchor Links
+    // This is handled by CSS `scroll-behavior: smooth;` in the new stylesheet.
+
+    // 4. Contact Form Submission
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // In a real application, you would send this data to a server.
+            alert('Thank you for your message! We will be in touch shortly.');
+            contactForm.reset();
+        });
+    }
+
+    // 5. Fade-in Animation on Scroll
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('fade-in-visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    const elementsToAnimate = document.querySelectorAll('.service-card, .step-card, .about-content, .contact-form');
+    elementsToAnimate.forEach(el => {
+        el.classList.add('fade-in-hidden');
+        observer.observe(el);
+    });
 });
 
-// Contact Form Handling
-const contactForm = document.getElementById('contactForm');
-if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        // Here you would typically send the form data to a server
-        alert('Thank you for your message! We will get back to you soon.');
-        contactForm.reset();
-    });
+// Add this small CSS snippet to your styles.css for the animation
+/*
+.fade-in-hidden {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
 
-// Add animation to service cards on scroll
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-        }
-    });
-}, {
-    threshold: 0.1
-});
-
-document.querySelectorAll('.service-card').forEach(card => {
-    card.style.opacity = '0';
-    card.style.transform = 'translateY(20px)';
-    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-    observer.observe(card);
-});
+.fade-in-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+*/
